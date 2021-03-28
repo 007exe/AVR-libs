@@ -1,0 +1,17 @@
+# exclude all dot files except .git, appveyor and travis files
+.*
+!.git*
+
+# exclude binaries and temporary files
+*.PVS-Studio.*
+*.gch
+*.so
+*.a
+*.o
+*.lst
+*.elf
+*.eep
+*.lss
+*.map
+*.sym
+*.hex
