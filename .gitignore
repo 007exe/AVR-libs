@@ -15,3 +15,6 @@
 *.map
 *.sym
 *.hex
+*.pdsbak
+*.workspace
+*.pdsprj
