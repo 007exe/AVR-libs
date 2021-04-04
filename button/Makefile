@@ -1,6 +1,6 @@
 MCU		= atmega8
 FCPU		= 8000000L
-SRC		= main.c button.c
+SRC		= main.c
 OUTFILE		= Test
 L_FUSE		= 0xE4
 H_FUSE		= 0x99
