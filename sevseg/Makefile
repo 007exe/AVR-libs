@@ -8,7 +8,7 @@ COMOILER	= avr-gcc
 CFLAGS		= -mmcu=$(MCU) -DF_CPU=$(FCPU) -Os -std=gnu99 -Wall -Os -Werror
 PROGRAMMER	= usbasp
 
-build:
+all: clean
 	@echo
 	@echo --- Компиляция ---
 	@$(COMOILER) $(CFLAGS) -mmcu=$(MCU) -c $(SRC)
@@ -29,5 +29,4 @@ upload_fuse:
 
 upload_all: upload upload_fuse
 
-all: build upload_all
-
+bu: all upload

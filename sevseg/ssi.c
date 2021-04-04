@@ -4,13 +4,13 @@
 */
 #include "ssi.h"
 
-unsigned char discharge_switch  = 0;
-unsigned char units = 0;
-unsigned char dozens = 0;
-//unsigned char hundreds = 0; // Расскоментировать если необходимы сотни
-//unsigned char thousand = 0; // Расскоментировать если необходимы тысячи
+uint8_t DischargeSwitch  = 0;
+uint8_t units = 0;
+uint8_t dozens = 0;
+//uint8_t hundreds = 0;//Расскоментировать если необходимы сотни
+//uint8_t thousand = 0;//Расскоментировать если необходимы тысячи
 
-void ssi_init (void)
+void SSI_Init (void)
 {
     SEG_A_DDR   |=(1<<SEG_A);
     SEG_A_PORT  |=(1<<SEG_A);
@@ -27,94 +27,94 @@ void ssi_init (void)
     SEG_G_DDR   |=(1<<SEG_G);
     SEG_G_PORT  |=(1<<SEG_G);
 /*
-    SEG_DP_DDR  |=(1<<SEG_DP); // Расскоментировать если
-    SEG_DP_PORT |=(1<<SEG_DP); // необходима точка
+    SEG_DP_DDR  |=(1<<SEG_DP);//Расскоментировать если
+    SEG_DP_PORT |=(1<<SEG_DP);//необходима точка
 */
     DISCHARGE_UNIT_DDR      |=(1<<DISCHARGE_UNIT);
     DISCHARGE_UNIT_PORT     |=(1<<DISCHARGE_UNIT);
     DISCHARGE_DOZENT_DDR    |=(1<<DISCHARGE_DOZENT);
     DISCHARGE_DOZENT_PORT   |=(1<<DISCHARGE_DOZENT);
 /*
-    DISCHARGE_HUNDREDS_DDR  |=(1<<DISCHARGE_HUNDREDS);     // Расскоментировать если
-    DISCHARGE_HUNDREDS_PORT &=~(1<<DISCHARGE_HUNDREDS);    // необходимы сотни
+    DISCHARGE_HUNDREDS_DDR  |=(1<<DISCHARGE_HUNDREDS);//Расскоментировать если
+    DISCHARGE_HUNDREDS_PORT &=~(1<<DISCHARGE_HUNDREDS);//необходимы сотни
 */
 /*
-    DISCHARGE_THOUSANDS_DDR |=(1<<DISCHARGE_THOUSANDS);    // Расскоментировать если
-    DISCHARGE_THOUSANDS_PORT |=(1<<DISCHARGE_THOUSANDS);   // необходимы тысячи
+    DISCHARGE_THOUSANDS_DDR |=(1<<DISCHARGE_THOUSANDS);//Расскоментировать если
+    DISCHARGE_THOUSANDS_PORT |=(1<<DISCHARGE_THOUSANDS);//необходимы тысячи
 */
 }
 
-void segchar (unsigned seg)
+void SegChar (unsigned seg)
 {
     switch(seg)
     {
-        case 0: {   SEG_A_ON;  SEG_B_ON;   SEG_C_ON;   SEG_D_ON;   SEG_E_ON;   SEG_F_ON;   SEG_G_OFF;  }    break;
-        case 1: {   SEG_A_OFF; SEG_B_ON;   SEG_C_ON;   SEG_D_OFF;  SEG_E_OFF;  SEG_F_OFF;  SEG_G_OFF;  }    break;
-        case 2: {   SEG_A_ON;  SEG_B_ON;   SEG_C_OFF;  SEG_D_ON;   SEG_E_ON;   SEG_F_OFF;  SEG_G_ON;   }    break;
-        case 3: {   SEG_A_ON;  SEG_B_ON;   SEG_C_ON;   SEG_D_ON;   SEG_E_OFF;  SEG_F_OFF;  SEG_G_ON;   }    break;
-        case 4: {   SEG_A_OFF; SEG_B_ON;   SEG_C_ON;   SEG_D_OFF;  SEG_E_OFF;  SEG_F_ON;   SEG_G_ON;   }    break;
-        case 5: {   SEG_A_ON;  SEG_B_OFF;  SEG_C_ON;   SEG_D_ON;   SEG_E_OFF;  SEG_F_ON;   SEG_G_ON;   }    break;
-        case 6: {   SEG_A_ON;  SEG_B_OFF;  SEG_C_ON;   SEG_D_ON;   SEG_E_ON;   SEG_F_ON;   SEG_G_ON;   }    break;
-        case 7: {   SEG_A_ON;  SEG_B_ON;   SEG_C_ON;   SEG_D_OFF;  SEG_E_OFF;  SEG_F_OFF;  SEG_G_OFF;  }    break;
-        case 8: {   SEG_A_ON;  SEG_B_ON;   SEG_C_ON;   SEG_D_ON;   SEG_E_ON;   SEG_F_ON;   SEG_G_ON;   }    break;
-        case 9: {   SEG_A_ON;  SEG_B_ON;   SEG_C_ON;   SEG_D_ON;   SEG_E_OFF;  SEG_F_ON;   SEG_G_ON;   }    break;
+        case 0: {SEG_G_OFF;  SEG_A_ON;   SEG_B_ON;   SEG_C_ON;   SEG_D_ON;   SEG_E_ON;   SEG_F_ON;} break;
+        case 1: {SEG_A_OFF;  SEG_D_OFF;  SEG_E_OFF;  SEG_F_OFF;  SEG_G_OFF;  SEG_B_ON;   SEG_C_ON;} break;
+        case 2: {SEG_C_OFF;  SEG_F_OFF;  SEG_A_ON;   SEG_B_ON;   SEG_D_ON;   SEG_E_ON;   SEG_G_ON;} break;
+        case 3: {SEG_E_OFF;  SEG_F_OFF;  SEG_A_ON;   SEG_B_ON;   SEG_C_ON;   SEG_D_ON;   SEG_G_ON;} break;
+        case 4: {SEG_A_OFF;  SEG_D_OFF;  SEG_E_OFF;  SEG_B_ON;   SEG_C_ON;   SEG_F_ON;   SEG_G_ON;} break;
+        case 5: {SEG_E_OFF;  SEG_B_OFF;  SEG_A_ON;   SEG_C_ON;   SEG_D_ON;   SEG_F_ON;   SEG_G_ON;} break;
+        case 6: {SEG_B_OFF;  SEG_A_ON;   SEG_C_ON;   SEG_D_ON;   SEG_E_ON;   SEG_F_ON;   SEG_G_ON;} break;
+        case 7: {SEG_D_OFF;  SEG_E_OFF;  SEG_F_OFF;  SEG_G_OFF;  SEG_A_ON;   SEG_B_ON;   SEG_C_ON;} break;
+        case 8: {SEG_A_ON;   SEG_B_ON;   SEG_C_ON;   SEG_D_ON;   SEG_E_ON;   SEG_F_ON;   SEG_G_ON;} break;
+        case 9: {SEG_E_OFF;  SEG_A_ON;   SEG_B_ON;   SEG_C_ON;   SEG_D_ON;   SEG_F_ON;   SEG_G_ON;} break;
     }
 }
 
-void ssi_print (unsigned int number)
+void SSI_Print (uint16_t number)
 {
     units = number%10;
-    dozens = number/10;
-//    hundreds = number/100;  // Расскоментировать если необходимы сотни
-//    thousand = number/1000; // Расскоментировать если необходимы тысячи
+    dozens = number%100/10;
+//    hundreds = number%1000/100;//Расскоментировать если необходимы сотни
+//    thousand = number%10000/1000;//Расскоментировать если необходимы тысячи
 }
 
-void ssi_digit_position (void)
+void SSI_DigitPosition (void)
 {
-    if (discharge_switch == 0)
+    if (DischargeSwitch == 0)
     {
-//        SEG_DP_OFF;                 // Выключить точку
-        DISCHARGE_UNIT_ON;
         DISCHARGE_DOZENT_OFF;
-//        DISCHARGE_HUNDREDS_OFF;     // Расскоментировать если необходимы сотни
-//        DISCHARGE_THOUSANDS_OFF;    // Расскоментировать если необходимы тысячи
-        segchar(units);
+//        DISCHARGE_HUNDREDS_OFF;//Расскоментировать если необходимы сотни
+//        DISCHARGE_THOUSANDS_OFF;//Расскоментировать если необходимы тысячи
+        DISCHARGE_UNIT_ON;
+        SegChar(units);
+//        SEG_DP_OFF;//Выключить точку
     }
 
-    if (discharge_switch == 1)
+    if (DischargeSwitch == 1)
     {
-//        SEG_DP_ON;                  // Включить точку
         DISCHARGE_UNIT_OFF;
+//        DISCHARGE_HUNDREDS_OFF;//Расскоментировать если необходимы сотни
+//        DISCHARGE_THOUSANDS_OFF;//Расскоментировать если необходимы тысячи
         DISCHARGE_DOZENT_ON;
-//        DISCHARGE_HUNDREDS_OFF;     // Расскоментировать если необходимы сотни
-//        DISCHARGE_THOUSANDS_OFF;    // Расскоментировать если необходимы тысячи
-        segchar(dozens);
+        SegChar(dozens);
+//        SEG_DP_ON;// Включить точку
     }
-// Расскоментировать если необходимы сотни
+//Расскоментировать если необходимы сотни
 /*
-    if (discharge_switch == 2)
+    if (DischargeSwitch == 2)
     {
-//        SEG_DP_OFF;                 // Выключить точку
         DISCHARGE_UNIT_OFF;
         DISCHARGE_DOZENT_OFF;
+//        DISCHARGE_THOUSANDS_OFF;//Расскоментировать если необходимы тысяч
         DISCHARGE_HUNDREDS_ON;
-//        DISCHARGE_THOUSANDS_OFF;    // Расскоментировать если необходимы тысячи
-        segchar(hundreds);
+        SegChar(hundreds);
+//        SEG_DP_OFF;//Выключить точку
     }
 */
 // Расскоментировать если необходимы тысячи
 /*
-    if (discharge_switch == 3)
+    if (DischargeSwitch == 3)
     {
-        SEG_DP_ON;                  // Выключить точку
         DISCHARGE_UNIT_OFF;
         DISCHARGE_DOZENT_OFF;
         DISCHARGE_HUNDREDS_OFF;
         DISCHARGE_THOUSANDS_ON;
-        segchar(thousand);
+        SegChar(thousand);
+//        SEG_DP_OFF;//Выключить точку
     }
 */
-    discharge_switch ++;
-// 
-    if (discharge_switch > (NUMDIS - 1)) discharge_switch = 0;
+    DischargeSwitch ++;
+
+    if (DischargeSwitch > (NUMDIS - 1)) DischargeSwitch = 0;
 }
