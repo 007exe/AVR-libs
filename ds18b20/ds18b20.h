@@ -2,17 +2,16 @@
 #define DS18B20_H_
  
 #include "main.h"
+//настройка порта к которому подключён датчик
+#define OWDDRT DDRD
+#define OWPIN PIND
+#define OWBIT PD2
 
-#define PORTTEMP PORTD
-#define DDRTEMP DDRD
-#define PINTEMP PIND
-#define BITTEMP 2
+#define SKIPID 0xCC
+#define CONVERT 0x44
+#define READMEMORY 0xBE
 
-#define SKIPID 0xCC //команда пропустить индентификацию
-#define T_CONVERT 0x44 //команда измерения температуры
-#define READ_DATA 0xBE //команда передать байты
-
-float CheckTemperature(void);
-uint8_t ChecSkign(void);
+float CheckTemperature(void); //функция проверки температуры
+uint8_t ChecSkign(void); //функция проверки знака
 
 #endif

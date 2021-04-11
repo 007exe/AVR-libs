@@ -1,102 +1,95 @@
 ﻿#include "ds18b20.h"
 
-uint16_t data = 0;
+uint16_t data = 0; 
 
-//функция инициализации устройства на шине
 int8_t OneWireResetDevice(void)
 {
-    int8_t temp_stek = SREG;//сохранить значение стека
-    cli();//запретить прерывание
+    int8_t temp_stek = SREG;
+    cli();
     int8_t check_device;
-    DDRTEMP |= 1 << BITTEMP; //притянуть шину
+    OWDDRT |= 1 << OWBIT;
     _delay_us(485);
-    DDRTEMP &= ~(1 << BITTEMP);//отпустить шину
+    OWDDRT &= ~(1 << OWBIT);
     _delay_us(65);
-    if((PINTEMP & (1 << BITTEMP)) == 0x00)//проверка наличия устройства на шине
-    check_device = 1;//устройство присутствует
-    else check_device = 0;//устройства отсутствует
-    SREG=temp_stek;//вернуть стек
+    if((OWPIN & (1 << OWBIT)) == 0x00)
+    check_device = 1;
+    else check_device = 0;
+    SREG=temp_stek;
     _delay_us(500);
     return check_device;
 }
- 
-//функция отправки бита на устройство
+
 void OneWireSendBit(int8_t bit)
 {
-    int8_t temp_stek = SREG;//сохранить значение стека
-    cli();//запретить прерывания
-    DDRTEMP |= 1 << BITTEMP; //притянуть шину
+    int8_t temp_stek = SREG;
+    cli();
+    OWDDRT |= 1 << OWBIT;
     _delay_us(2);
     if(bit)
-    DDRTEMP &= ~(1 << BITTEMP);//опустить шину
+    OWDDRT &= ~(1 << OWBIT);
     _delay_us(65);
-    DDRTEMP &= ~(1 << BITTEMP);//отпустить шину
-    SREG=temp_stek;//вернуть стек
+    OWDDRT &= ~(1 << OWBIT);
+    SREG=temp_stek;
 }
- 
-//функция отправки байта на устройство
+
 void OneWireSendByte(uint8_t byte)
 {
     for(int8_t i = 0; i < 8; i++)
     {
-        if((byte & (1 << i)) == 1<<i)// если бит равен 1 то
-        OneWireSendBit(1);//послать 1
+        if((byte & (1 << i)) == 1<<i)
+        OneWireSendBit(1);
         else
-        OneWireSendBit(0);//послать 0
+        OneWireSendBit(0);
         _delay_us(5);
     }
 }
- 
-//функция чтения бита с устройства
+
 int8_t OneWireReadBit (void)
 {
-    int8_t temp_stek = SREG;//сохранить стека
-    cli();//запрктить прерывания
+    int8_t temp_stek = SREG;
+    cli();
     int8_t bit;
-    DDRTEMP |= 1 << BITTEMP;//притянуть шину
+    OWDDRT |= 1 << OWBIT;
     _delay_us(2);
-    DDRTEMP &= ~(1 << BITTEMP);//отпустить шину
+    OWDDRT &= ~(1 << OWBIT);
     _delay_us(13);
-    bit = (PINTEMP & (1 << BITTEMP)) >> BITTEMP;//читать бит
+    bit = (OWPIN & (1 << OWBIT)) >> OWBIT;
     _delay_us(45);
-    SREG = temp_stek;//вернуть стек
+    SREG = temp_stek;
     return bit;
 }
- 
-//функция чтения байта с устройства
+
 uint8_t OneWireReadByte()
 {
     int8_t byte = 0;
     int8_t i;
-    for(i = 0; i < 8; i++)//цикл чтения байта
-    byte |= OneWireReadBit()<<i;//читать каждый бит сдвигая в лево
+    for(i = 0; i < 8; i++)
+    byte |= OneWireReadBit()<<i;
     return byte;
 }
- 
-//функция измерения и приёма температуры от датчика
+
 float CheckTemperature(void)
 {
     uint8_t lbyte = 0;
     uint16_t hbyte = 0;
     float TermData = 0;
-    if(OneWireResetDevice() == 1)//если устройство нашлось
+    if(OneWireResetDevice() == 1)
     {
-        OneWireSendByte(SKIPID);//комманда пропустить идентификацию
-        OneWireSendByte(T_CONVERT);//комманда измерить температуру
-        _delay_ms(750);//ждём 750 мили секунд для 12 битного режима (медленно зато точно 0,0625 (1/16) градуса цельсия)
-        OneWireResetDevice();//проверить присутствие устройства
-        OneWireSendByte(SKIPID);//комманда пропустить идентификацию
-        OneWireSendByte(READ_DATA);//комманда передать байты ведущему устройству
-        lbyte = OneWireReadByte();//читать младший байт
-        hbyte = OneWireReadByte();//читать старший байт
-        data = (hbyte<<8)|lbyte;//сдвинуть старший байт влево, младнший байт записать на его место
+        OneWireSendByte(SKIPID);
+        OneWireSendByte(CONVERT);
+        _delay_ms(750);
+        OneWireResetDevice();
+        OneWireSendByte(SKIPID);
+        OneWireSendByte(READMEMORY);
+        lbyte = OneWireReadByte();
+        hbyte = OneWireReadByte();
+        data = (hbyte<<8)|lbyte;
     }
     if(data&(1 << 11))
-    return TermData = (~(data) + 0b00000001) / 16.0;//если температура отрицательная
-    else return TermData = data / 16.0;//если температура положительная
+    return TermData = (~(data) + 0b00000001) / 16.0;
+    else return TermData = data / 16.0;
 }
 
-//функция проверки знака
 uint8_t ChecSkign(void)
 {
     if(data & (1 << 11)) return 1; else return 0;
