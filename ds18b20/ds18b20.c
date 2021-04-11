@@ -1,6 +1,6 @@
 ﻿#include "ds18b20.h"
 
-    uint16_t data = 0;
+uint16_t data = 0;
 
 //функция инициализации устройства на шине
 int8_t OneWireResetDevice(void)
@@ -74,7 +74,7 @@ uint8_t OneWireReadByte()
 }
  
 //функция измерения и приёма температуры от датчика
-uint16_t CheckTemperature(void)
+float CheckTemperature(void)
 {
     uint8_t lbyte = 0;
     uint16_t hbyte = 0;
@@ -92,20 +92,12 @@ uint16_t CheckTemperature(void)
         data = (hbyte<<8)|lbyte;//сдвинуть старший байт влево, младнший байт записать на его место
     }
     if(data&(1 << 11))
-    TermData = (~(data) + 0b00000001) * 0.0625;//если температура отрицательная
-    else TermData = data * 0.0625;//если температура положительная
-    return 1000 * TermData;
+    return TermData = (~(data) + 0b00000001) / 16.0;//если температура отрицательная
+    else return TermData = data / 16.0;//если температура положительная
 }
 
 //функция проверки знака
 uint8_t ChecSkign(void)
 {
     if(data & (1 << 11)) return 1; else return 0;
-}
-
-//функция инициализации датчика установка скорости
-void DS_Init (uint8_t RESOLUTION)
-{
-    OneWireSendByte(SKIPID);//комманда пропустить идентификацию
-    OneWireSendByte(RESOLUTION);
 }

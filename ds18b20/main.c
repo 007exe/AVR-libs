@@ -21,11 +21,10 @@ int main(void)
     sei();                  // Разрешаем глобальные прерывания.
     DDRD |=(1 << PD7);
     PORTD &=~(1 << PD7);
-    DS_Init (RESOLUTION_12BIT);
 
     while (1)
     {
         if (ChecSkign() == 0) PORTD &=~(1 << PD7); else PORTD |=(1 << PD7);
-        ssi_print(CheckTemperature()/100);
+        ssi_print(CheckTemperature()*10);
     }
 }
