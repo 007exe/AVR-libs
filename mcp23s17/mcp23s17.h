@@ -5,7 +5,7 @@
 #define MCP23S17_AAA		0x00
 #define MCP23S17_ADDRES		0x40
 
-// флаги чтения записи
+// С„Р»Р°РіРё С‡С‚РµРЅРёСЏ Р·Р°РїРёСЃРё
 #define MCP23S17_W			0x00
 #define MCP23S17_R			0x01
 
@@ -45,13 +45,13 @@
 #define INTPOL	1
 #define Unimplemented	0
 
-// запись значения врегистр А-адрес D-данные
-void MCP23S17_write_Register(char A, char D);
+// Р·Р°РїРёСЃСЊ Р·РЅР°С‡РµРЅРёСЏ РІ СЂРµРіРёСЃС‚СЂ Рђ-Р°РґСЂРµСЃ D-РґР°РЅРЅС‹Рµ
+void MCP23S17_write_Register(uint8_t A, uint16_t D);
 
-// чтение значения в регистр A-адрес
-char MCP23S17_read_Register (char A);
+// С‡С‚РµРЅРёРµ Р·РЅР°С‡РµРЅРёСЏ РёР· СЂРµРіРёСЃС‚СЂР° A-Р°РґСЂРµСЃ
+uint8_t MCP23S17_read_Register (uint8_t A);
 
-// Функции работают при настройке как BANC = 0
+// С„СѓРЅРєС†РёРё СЂР°Р±РѕС‚Р°СЋС‚ РїСЂРё РЅР°СЃС‚СЂРѕР№РєРµ РєР°Рє BANC = 0
 #define MCP23S17_DDRA_W(x)	MCP23S17_write_Register(MCP23S17_IODIRA,~x)
 #define MCP23S17_DDRA_R		MCP23S17_read_Register(MCP23S17_IODIRA)
 

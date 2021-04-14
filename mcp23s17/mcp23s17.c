@@ -1,17 +1,17 @@
 #include "mcp23s17.h"
 
-// запись значения врегистр А-адрес D-данные
-void MCP23S17_write_Register(char A, char D)
+// Р·Р°РїРёСЃСЊ Р·РЅР°С‡РµРЅРёСЏ РІ СЂРµРіРёСЃС‚СЂ Рђ-Р°РґСЂРµСЃ D-РґР°РЅРЅС‹Рµ
+void MCP23S17_write_Register(uint8_t A, uint16_t D)
 {
-SPI_PORT&=~(1<<SS); // опускаем линию
+SPI_PORT&=~(1<<SS);
 SPI_MasterTransmit(MCP23S17_ADDRES|MCP23S17_AAA|MCP23S17_W);
 SPI_MasterTransmit(A);
 SPI_MasterTransmit(D);
 SPI_PORT|=(1<<SS);
 }
 
-// чтение значения в регистр A-адрес
-char MCP23S17_read_Register (char A)
+// С‡С‚РµРЅРёРµ Р·РЅР°С‡РµРЅРёСЏ РёР· СЂРµРіРёСЃС‚СЂР° A-Р°РґСЂРµСЃ
+uint8_t MCP23S17_read_Register (uint8_t A)
 {
 	char R;
 	SPI_PORT&=~(1<<SS);
